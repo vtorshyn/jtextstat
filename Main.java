@@ -32,6 +32,7 @@ public class Main {
 		char [] buffer = new char[size+bufferReserve];
 		boolean ignoreCase = true;
 		int outputLimit = 5;
+		int occuranceCountFilterValue = 10;
 		Map<String, Integer> wordsMap = new HashMap<String, Integer>(1024);
 
 		while(rd.read(buffer, 0, size) > 0) {
@@ -63,6 +64,7 @@ public class Main {
 			Arrays.fill(buffer, ' '); // Yes, let's reuse mem
 		}
 		Map<String, Integer> sortedMap = wordsMap.entrySet().stream()
+			.filter(s -> s.getValue() >= occuranceCountFilterValue)
 			.sorted(
 				Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()) // First by value
 				.thenComparing(Map.Entry.comparingByKey()) // and the by key
