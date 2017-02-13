@@ -1,11 +1,16 @@
 .PHONY: all
 # The reason to use Make... is the only one Java dependency - java 8)
 
-SOURCES=Main.class
 PACKAGE=com.vtorshyn
 MAINCLASS=$(PACKAGE).Main
 BUILD_DIR=build/
 PACKAGE_TO_DIR=`echo $(PACKAGE) | sed 's/\./\//g'`
+
+# Path to class files in $(BUILD_DIR)/$(PACKAGE_TO_DIR)
+CLASSES=utils/ApplicationOptions.class \
+	utils/CharUtils.class \
+	Main.class
+
 
 TEST_DATA_LINES=10000000
 TEST_DATA_FILE=$(BUILD_DIR)/input.txt
@@ -16,7 +21,7 @@ TASK_SAMPLE=task-text.in
 all: build-app
 
 # An alias for compiling java sources
-build-app: $(SOURCES)
+build-app: $(CLASSES)
 
 # Grouping steps required to execute app with provided sample in email
 run: build-app run-test-sample
@@ -33,7 +38,7 @@ run-test-sample: clean-test-data
 
 # Main target used to compile sources.
 # Please note usage .class ext in sources variable.
-$(SOURCES): make-dst-dirs
+$(CLASSES): make-dst-dirs
 	$(eval Class=$(shell echo $@ | sed 's/\.class/\.java/g'))
 	@echo "Compiling: $(Class)"
 	@javac -cp $(CLASSPATH):$(BUILD_DIR) -d $(BUILD_DIR) ./src/main/java/$(PACKAGE_TO_DIR)/$(Class)
@@ -47,6 +52,7 @@ clean:
 # Distribution clean up steps.
 distclean: clean clean-test-data
 	find ./ -name "*~" | xargs rm > /dev/null 2>&1 || true
+	[ -d target ] && rm -rf target
 
 # Grouping required steps to be executed before test run
 prepare-test: notify-gen-test gen-test-data

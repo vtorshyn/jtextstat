@@ -13,17 +13,10 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.LinkedHashMap;
 
+import com.vtorshyn.utils.ApplicationOptions;
+import com.vtorshyn.utils.CharUtils;
+
 public class Main {
-	private static boolean isazAZ09(char _ch) {
-		if (
-			( _ch >= 'a' && _ch <= 'z') ||
-			( _ch >= 'A' && _ch <= 'Z') ||
-			( _ch >= '0' && _ch <= '9')
-			) {
-			return true;
-		}
-		return false;
-	}
 	public static void main(String[] args) throws Exception {
 		Path f = Paths.get("input.txt");
 		BufferedReader rd = Files.newBufferedReader(f,Charset.forName("UTF-8"));
@@ -41,17 +34,17 @@ public class Main {
 			String word = "";
 			int iteration = 0;
 			// Checking boundaries
-			if (isazAZ09(buffer[lastBufferPos])) {
+			if (CharUtils.isazAZ09(buffer[lastBufferPos])) {
 				// Checking next char
 				char n;
-				while ( (n = (char)rd.read()) > 0 && isazAZ09(n) ) {
+				while ( (n = (char)rd.read()) > 0 && CharUtils.isazAZ09(n) ) {
 					buffer[lastBufferPos + iteration + 1] = n;
 					++iteration;
 				}
 			}
 			for (; pos < buffer.length; ++pos) {
 				char _ch = buffer[pos];
-				if (isazAZ09(_ch)) {
+				if (CharUtils.isazAZ09(_ch)) {
 					word += _ch;
 				} else {
 					if (word.length() > 0) {

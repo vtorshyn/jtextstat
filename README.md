@@ -1,21 +1,26 @@
 # jtextstat
 An simple Java application which scans a text file and prints statistics
 
-# Requirements
+## Requirements
 - Bash shell (*nix or Cygwin)
 - GNU Make
 - Perl
 - Java version >= 8
 
 # Usage
-To execute the application with provided sample data just type:
+To compile and execute the application with provided sample data just type:
  make run
 
 To remove build artefacts type:
  make clean
 
-# Big input file test
+## Big input file test
  make run-test
+
+# Maven 
+Use common maven commands to compile and execute UT
+ mvn clean install
+On success you should see jtextstat-0.0.1-SNAPSHOT.jar in target folder.
 
 # Notes
 Single thread execution time:
