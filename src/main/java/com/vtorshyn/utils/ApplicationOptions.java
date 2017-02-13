@@ -1,30 +1,47 @@
 package com.vtorshyn.utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.vtorshyn.exceptions.CommandLineException;
 
 public class ApplicationOptions extends HashMap<String,String>{
 
 	private static final long serialVersionUID = 1L;
 
-	ApplicationOptions(String[] mandatoryKeys, String[] stringList) {
+	public ApplicationOptions(String[] mandatoryKeys, String[] stringList) throws CommandLineException {
 		super();
 		loadFromStringArray(stringList, "-");
 		validateKeys(mandatoryKeys);
 	}
-	public void loadFromStringArray(String[] stringList, String delim) {
+	/**!
+	 * Loads options into self.
+	 * It detects options by using @param delim.
+	 * 
+	 * Supported formats:
+	 * - options without parameters flags (e.g. -help) 
+	 * - options with single parameter (-option parameter)
+	 * - options with multiple parameters separated by space (-option "this is complex")
+	 *
+	 * @param strings - input String[], usually args from main()
+	 * @param delim - delimiter used to detect option
+	 * @throws CommandLineException 
+	 * - if unknown option supplied
+	 */
+	public void loadFromStringArray(String[] strings, String delim) throws CommandLineException {
 		String option = null;
-		int len = stringList.length,
+		int len = strings.length,
 				idx = 0;
 		for (; idx < len; ++idx) {
-			String v = stringList[idx];
+			String v = strings[idx];
 			if (!v.startsWith(delim)) {
 				if (null != option) {
 					this.put(option, v);
 					option = null;
 					continue;
 				}
-				System.out.println("Unknown option: " + v);
+				throw new CommandLineException("Unknown option: " + v);
 			} else if (null != option) {
 				this.put(option, "");
 				option = v.replaceFirst("-", "");
@@ -32,16 +49,29 @@ public class ApplicationOptions extends HashMap<String,String>{
 				option = v.replaceFirst("-", "");
 			}
 		}
-		System.out.println(this.toString());
 	}
 	
+	/**!
+	 * Returns associated value for option  @param key
+	 * @param key - an option name
+	 * @return 
+	 * - value for a option or null if key is not found
+	 * - empty string for flags
+	 */
 	public String value(String key) {
 		if (this.containsKey(key)) {
 			return get(key);
 		}
 		return null;
 	}
-	
+	/**!
+	 * Converts value associated with @param key to integer
+	 * and return it.
+	 * If key is missed zero value returned.
+	 * @param key
+	 * @return 
+	 * - integer representation of value associated with option 
+	 */
 	public int intValue(String key) {
 		String v = value(key);
 		if (null == v || v.length() == 0) {
@@ -50,7 +80,14 @@ public class ApplicationOptions extends HashMap<String,String>{
 		return Integer.parseInt(v);
 	}
 	
-	public List<String> validateKeys(String[] keys) {
+	/**!
+	 * Simple validation for required keys listed in @param keys.
+	 * If some key from @param keys is missed, exception will be thrown.
+	 * @param keys
+	 * @return
+	 * @throws CommandLineException
+	 */
+	public List<String> validateKeys(String[] keys) throws CommandLineException {
 		List<String> missedKeys = null;
 		
 		for (String k : keys) {
@@ -63,7 +100,8 @@ public class ApplicationOptions extends HashMap<String,String>{
 		}
 		
 		if (null != missedKeys) {
-			System.out.println("Missed: " + missedKeys.toString());
+			throw new CommandLineException(
+					"Missed command line options: " + missedKeys.toString());
 		}
 		return missedKeys;
 	}

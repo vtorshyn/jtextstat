@@ -7,7 +7,9 @@ BUILD_DIR=build/
 PACKAGE_TO_DIR=`echo $(PACKAGE) | sed 's/\./\//g'`
 
 # Path to class files in $(BUILD_DIR)/$(PACKAGE_TO_DIR)
-CLASSES=utils/ApplicationOptions.class \
+CLASSES=exceptions/CommandLineException.class \
+	utils/ApplicationOptions.class \
+	utils/Logger.class \
 	utils/CharUtils.class \
 	Main.class
 
@@ -29,12 +31,12 @@ run: build-app run-test-sample
 # Another test
 # It generates file with amount of lines defined in TEST_DATA_LINES
 run-test: build-app clean-test-data prepare-test
-	cd $(BUILD_DIR)/ && time java -cp $(BUILD_DIR)/$(PACKAGE_TO_DIR):. $(MAINCLASS) $(TEST_DATA_FILE)
+	cd $(BUILD_DIR)/ && time java -cp $(BUILD_DIR)/$(PACKAGE_TO_DIR):. $(MAINCLASS) -input $(TEST_DATA_FILE)
 
 # An target to execute application with provided sample data file
 run-test-sample: clean-test-data
 	ln -s ../$(TASK_SAMPLE) $(BUILD_DIR)/input.txt 
-	cd $(BUILD_DIR)/ && time java -cp $(PACKAGE_TO_DIR):. $(MAINCLASS)
+	cd $(BUILD_DIR)/ && time java -cp $(PACKAGE_TO_DIR):. $(MAINCLASS) -input input.txt
 
 # Main target used to compile sources.
 # Please note usage .class ext in sources variable.
