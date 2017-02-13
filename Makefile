@@ -1,46 +1,70 @@
 .PHONY: all
-# The reason to use Make... is the only one dependency - java 8)
+# The reason to use Make... is the only one Java dependency - java 8)
 
-sources=Main.class
-MainClass=Main
+SOURCES=Main.class
+PACKAGE=com.vtorshyn
+MAINCLASS=$(PACKAGE).Main
+BUILD_DIR=build/
+PACKAGE_TO_DIR=`echo $(PACKAGE) | sed 's/\./\//g'`
 
-TEST_DATA_BLOCKS=10000000
-TEST_DATA_FILE=input.txt
+TEST_DATA_LINES=10000000
+TEST_DATA_FILE=$(BUILD_DIR)/input.txt
 TEST_TEXT=.This is a test text, a text used by a test to test!
+TASK_SAMPLE=task-text.in
 
+# Default target
 all: build-app
 
-build-app: $(sources)
+# An alias for compiling java sources
+build-app: $(SOURCES)
 
-run: build-app prepare-test run-test
+# Grouping steps required to execute app with provided sample in email
+run: build-app run-test-sample
 
-run-test:
-	time java -cp $$PWD:. $(MainClass) $(TEST_DATA_FILE)
-run-test-sample:
-	time java -cp $$PWD:. $(MainClass) $(shell *.in)
-$(sources):
+# Another test
+# It generates file with amount of lines defined in TEST_DATA_LINES
+run-test: build-app clean-test-data prepare-test
+	cd $(BUILD_DIR)/ && time java -cp $(BUILD_DIR)/$(PACKAGE_TO_DIR):. $(MAINCLASS) $(TEST_DATA_FILE)
+
+# An target to execute application with provided sample data file
+run-test-sample: clean-test-data
+	ln -s ../$(TASK_SAMPLE) $(BUILD_DIR)/input.txt 
+	cd $(BUILD_DIR)/ && time java -cp $(PACKAGE_TO_DIR):. $(MAINCLASS)
+
+# Main target used to compile sources.
+# Please note usage .class ext in sources variable.
+$(SOURCES): make-dst-dirs
 	$(eval Class=$(shell echo $@ | sed 's/\.class/\.java/g'))
 	@echo "Compiling: $(Class)"
-	@javac -cp $(CLASSPATH):. $(Class)
+	@javac -cp $(CLASSPATH):$(BUILD_DIR) -d $(BUILD_DIR) ./src/main/java/$(PACKAGE_TO_DIR)/$(Class)
+
+#
+make-dst-dirs:
+	mkdir -p $(BUILD_DIR)/$(PACKAGE_TO_DIR)
+# Cleaning build artefacts
 clean:
-	@find ./ -name "*.class" | xargs rm > /dev/null 2>&1 || true
-
+	rm -rf $(BUILD_DIR)
+# Distribution clean up steps.
 distclean: clean clean-test-data
-	@find ./ -name "*~" | xargs rm > /dev/null 2>&1 || true
+	find ./ -name "*~" | xargs rm > /dev/null 2>&1 || true
 
+# Grouping required steps to be executed before test run
 prepare-test: notify-gen-test gen-test-data
+
 # Simple target to print gen. data releated information
 notify-gen-test:
-	@echo "generating test data $(TEST_DATA_FILE) with $(TEST_DATA_BLOCKS) blocks  ..."
+	@echo "generating test data $(TEST_DATA_FILE) with $(TEST_DATA_LINES) blocks  ..."
 
+# An alias to $(TEST_DATA_FILE)
 gen-test-data: $(TEST_DATA_FILE)
 
 # Do not afraid of this :)
 # It's just faster way to create HUGE files if required
 $(TEST_DATA_FILE):
 	@perl -e \
-	'open(my $$input_data, ">", "$(TEST_DATA_FILE)"); for( $$a = 0; $$a < $(TEST_DATA_BLOCKS); $$a = $$a + 1 ){ print $$input_data "$(TEST_TEXT)\n"; }; close($$input_data);'
+	'open(my $$input_data, ">", "$(TEST_DATA_FILE)"); for( $$a = 0; $$a < $(TEST_DATA_LINES); $$a = $$a + 1 ){ print $$input_data "$(TEST_TEXT)\n"; }; close($$input_data);'
 	@echo "test data generated"
 
+# Removing generated input file
 clean-test-data:
 	rm -f $(TEST_DATA_FILE)
