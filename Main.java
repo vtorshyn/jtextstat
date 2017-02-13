@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.LinkedHashMap;
+
 public class Main {
 	private static boolean isazAZ09(char _ch) {
 		if (
@@ -29,6 +30,8 @@ public class Main {
 			lastBufferPos = size - 1,
 			bufferReserve = 100;
 		char [] buffer = new char[size+bufferReserve];
+		boolean ignoreCase = true;
+		int outputLimit = 5;
 		Map<String, Integer> wordsMap = new HashMap<String, Integer>(1024);
 
 		while(rd.read(buffer, 0, size) > 0) {
@@ -50,6 +53,8 @@ public class Main {
 					word += _ch;
 				} else {
 					if (word.length() > 0) {
+						if (ignoreCase)
+							word = word.toLowerCase();
 						wordsMap.merge(word, 1, Integer::sum);
 					}
 					word = "";
@@ -60,7 +65,7 @@ public class Main {
 		Map<String, Integer> sortedMap = 
 			wordsMap.entrySet().stream()
 			.sorted(Entry.comparingByValue(Comparator.reverseOrder()))
-			.limit(5)
+			.limit(outputLimit)
 			.collect(Collectors.toMap(Entry::getKey, Entry::getValue,
                               (e1, e2) -> e1, LinkedHashMap::new));
 		System.out.println("Raw: " + wordsMap);
