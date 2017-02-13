@@ -54,7 +54,7 @@ public class Main {
 				} else {
 					if (word.length() > 0) {
 						if (ignoreCase)
-							word = word.toLowerCase();
+							word = word.toLowerCase(); // will slightly slowdown
 						wordsMap.merge(word, 1, Integer::sum);
 					}
 					word = "";
@@ -62,12 +62,15 @@ public class Main {
 			}
 			Arrays.fill(buffer, ' '); // Yes, let's reuse mem
 		}
-		Map<String, Integer> sortedMap = 
-			wordsMap.entrySet().stream()
-			.sorted(Entry.comparingByValue(Comparator.reverseOrder()))
-			.limit(outputLimit)
-			.collect(Collectors.toMap(Entry::getKey, Entry::getValue,
+		Map<String, Integer> sortedMap = wordsMap.entrySet().stream()
+			.sorted(
+				Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()) // First by value
+				.thenComparing(Map.Entry.comparingByKey()) // and the by key
+				)
+				.limit(outputLimit)
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue,
                               (e1, e2) -> e1, LinkedHashMap::new));
+
 		System.out.println("Raw: " + wordsMap);
 		System.out.println("Result: " + sortedMap);
 		
