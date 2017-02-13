@@ -13,4 +13,5 @@ hs_err_pid*
 
 # Generated files
 *.txt
-./build/*
+./build/
+./target/
