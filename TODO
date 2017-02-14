@@ -1,0 +1,9 @@
+1. Add support for human friendly command line options (in progress already) (!)
+2. Add UT body test (!!!)
+3. Run various benchmarks with ThreadPool enabled solution. (..)
+- reader can executed in main thread since reading from file is well optimized already; 
+- workers should parse read buffer, create own word map
+- on success workers should merge word map into global word map
+- required to play with readBuffer size: to small thread contention; to big - same performance as single threaded solution
+4. ApplicationOptions is not well designed. mandatoryOptions should be moved from ctor (..)
+5. Move final map sort into separate task (!)
