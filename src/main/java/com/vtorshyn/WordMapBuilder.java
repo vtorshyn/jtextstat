@@ -30,7 +30,6 @@ public class WordMapBuilder {
 	}
 	
 	public Map<String, Integer> buildFromCharArray(char[] buffer) {
-		synchronized(buffer) {
 		Map<String, Integer> wordsMap = new HashMap<>(512);
 		int pos = 0;
 		String word = "";
@@ -49,6 +48,5 @@ public class WordMapBuilder {
 			}
 		}
 		return wordsMap;
-		}
 	}
 }

@@ -64,9 +64,9 @@ public class WordsRangeReader {
 		if (CharUtils.isazAZ09(buffer[lastItemIndex])) {
 			// Checking next char
 			char n;
-			int iteration = 0;
+			int iteration = 1;
 			while ((n = (char) reader.read()) > 0 && CharUtils.isazAZ09(n)) {
-				buffer[lastItemIndex + iteration + 1] = n;
+				buffer[lastItemIndex + iteration] = n;
 				++iteration;
 			}
 		}
