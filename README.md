@@ -104,4 +104,22 @@ user	0m22.050s
 sys	0m1.063s
 Fri Feb 24 17:05:31 GMT 2017
 ```
-- Intel Core i5 1.7 Ghz (2 Cores, HT On) - around 14 seconds for 130 000 000 words in text file
+- Intel Core i5 1.7 Ghz (2 Cores, HT On) - around 6 (was 14) seconds for 130 000 000 words in text file
+```
+com.vtorshyn.word.processor.WordProcessorBuilder.parallelFactor=4
+com.vtorshyn.word.processor.WordProcessor.maxEntries=5
+com.vtorshyn.word.processor.WordProcessor.minimum=5
+com.vtorshyn.word.processor.WordsRangeReader.readBufferSize=3276800
+com.vtorshyn.word.processor.WordsRangeReader.readBufferDeltaSize=100
+com.vtorshyn.word.processor.WordsRangeReader.file=build/input.txt
+com.vtorshyn.WordMapBuilder.ignoreCase=
+
+*** Completed succesfully ***
+Total word count: 130000000
+Total number of unique words: 8
+Result: {a=30000000, test=30000000, text=20000000, This=10000000, by=10000000}
+
+real	0m6.626s
+user	0m24.373s
+
+```
