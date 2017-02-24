@@ -2,7 +2,6 @@ package com.vtorshyn.exceptions;
 
 /**!
  * 
- * @author vtorshyn
  * An exception thrown whenever command line options
  * provided is not sufficient or missed.
  */
