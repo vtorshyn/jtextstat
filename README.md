@@ -21,7 +21,7 @@ Alternatively you can use GNU Make:
 
 ```
 make clean all
-``
+```
 
 # Executing
 Main class is added into manifest so jar can be executed directly by:
