@@ -8,7 +8,7 @@ An simple Java application which scans a text file and prints statistics
 - Java version >= 8
 
 # Usage
-To compile and execute the application with provided sample data just type:
+To compile and execute the application with intree "Carol Of The Bells" lyrics just type:
 
  make run
 
