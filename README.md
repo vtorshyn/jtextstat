@@ -53,5 +53,5 @@ Result: {merry=16, christmas=8, their=8, to=8, and=6, cheer=6, ding=6, dong=6, g
 
 # Notes
 Single thread execution time:
-- Intel Xeon 2.9 Ghz (4 Cores, HT On) - around 4 seconds for 10 000 000 lines text file
-- Intel Core i5 1.7 Ghz (2 Cores, HT On) - around 14 seconds for 10 000 000 lines text file
+- Intel Xeon 2.9 Ghz (4 Cores, HT On) - around 4 seconds for 130 000 000 words in text file
+- Intel Core i5 1.7 Ghz (2 Cores, HT On) - around 14 seconds for 130 000 000 words in text file
