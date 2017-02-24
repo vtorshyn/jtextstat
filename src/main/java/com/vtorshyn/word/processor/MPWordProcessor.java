@@ -10,26 +10,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import com.vtorshyn.utils.Logger;
 
 import com.vtorshyn.WordMapBuilder;
-import com.vtorshyn.utils.OptionsMap;
-import com.vtorshyn.utils.IntegerCommandLineOption;
-import com.vtorshyn.utils.Logger;
-import com.vtorshyn.utils.StringCommandLineOption;
 
-public class MPWordProcessor implements WordProcessor, Runnable {
 
-	@IntegerCommandLineOption(defaultValue = 5, help = "Simple filter for words counters.")
-	public Integer minimum;
-
-	@IntegerCommandLineOption(defaultValue = 5, help = "Limit output to this number of entries.")
-	public Integer maxEntries;
-
-	@StringCommandLineOption(help = "dump raw map before sorting")
-	public String debugRaw;
+public class MPWordProcessor extends WordProcessor implements Runnable {
 
 	private Map<String, Integer> wordsMap;
-	private Logger logger;
+	
 	private int threadPoolSize = 1;
 	
 	private class Context {
@@ -45,18 +34,7 @@ public class MPWordProcessor implements WordProcessor, Runnable {
 	}
 	
 	private Context ctx;
-	private void init() throws Exception {
-		try {
-			OptionsMap o = OptionsMap.get();
-			logger = Logger.get();
-			o.bind(this.getClass(), this);
-			logger.log(this.getClass().getName() + ".maxEntries=" + maxEntries.toString());
-			logger.log(this.getClass().getName() + ".minimum=" + minimum.toString());
-		} catch (Exception e) {
-			logger.log("Error: " + e.getMessage());
-			throw e;
-		}
-	}
+	
 	public MPWordProcessor(int threadPoolSize) throws Exception {
 		init();
 		this.threadPoolSize = threadPoolSize;
@@ -101,9 +79,8 @@ public class MPWordProcessor implements WordProcessor, Runnable {
 		// return wordsMap;
 		int max_output = maxEntries.intValue();
 		Map<String, Integer> m = wordsMap.entrySet().stream().filter(s -> s.getValue() >= minimum.intValue())
-				.sorted(Map.Entry.<String, Integer> comparingByValue(Comparator.reverseOrder())
-						.thenComparing(Map.Entry.comparingByKey()) // and the by
-																	// key
+				.sorted(Map.Entry.<String, Integer> comparingByValue(Comparator.reverseOrder()) // by value
+						.thenComparing(Map.Entry.comparingByKey()) // and then by key
 				).limit(max_output).collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 		return m;
 	}
@@ -113,11 +90,7 @@ public class MPWordProcessor implements WordProcessor, Runnable {
 		logger = Logger.get();
 		Map<String, Integer> m = this.ctx.builder.buildFromCharArray(this.ctx.buffer);
 		for (Map.Entry<String, Integer> e : m.entrySet()) {
-			//if (this.ctx.wordsMap.containsKey(e.getKey())) {
-				this.ctx.wordsMap.merge(e.getKey(), e.getValue(), Integer::sum);
-			//} else {
-				//this.ctx.wordsMap.put(e.getKey(), e.getValue());
-			//}
+			this.ctx.wordsMap.merge(e.getKey(), e.getValue(), Integer::sum);
 		}
 	}
 }

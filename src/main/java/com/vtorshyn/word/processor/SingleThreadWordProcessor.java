@@ -8,36 +8,12 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.vtorshyn.WordMapBuilder;
-import com.vtorshyn.utils.OptionsMap;
-import com.vtorshyn.utils.IntegerCommandLineOption;
-import com.vtorshyn.utils.Logger;
-import com.vtorshyn.utils.StringCommandLineOption;
 
-public class SingleThreadWordProcessor implements WordProcessor {
-	@IntegerCommandLineOption(defaultValue=5, help="Simple filter for words counters.")
-	public Integer minimum;
-	
-	@IntegerCommandLineOption(defaultValue=5, help="Limit output to this number of entries.")
-	public Integer maxEntries;
-	
-	@StringCommandLineOption(help="dump raw map before sorting")
-	public String debugRaw;
+
+public class SingleThreadWordProcessor extends WordProcessor {
 	
 	private Map<String, Integer> wordsMap;
-	private Logger logger;
-	
-	private void init() throws Exception {
-		try {
-			OptionsMap o = OptionsMap.get();
-			logger = Logger.get();
-			o.bind(this.getClass(), this);
-			logger.log(this.getClass().getName()+".maxEntries="+maxEntries.toString());
-			logger.log(this.getClass().getName()+".minimum="+minimum.toString());
-		} catch (Exception e) {
-			logger.log("Error: " + e.getMessage());
-			throw e;
-		}
-	}
+
 	public void start() throws Exception {
 		init();
 		WordsRangeReader rd = new WordsRangeReader();

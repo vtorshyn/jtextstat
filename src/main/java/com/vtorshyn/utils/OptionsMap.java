@@ -8,6 +8,8 @@ import com.vtorshyn.WordMapBuilder;
 import com.vtorshyn.exceptions.CommandLineException;
 import com.vtorshyn.word.processor.WordProcessorBuilder;
 import com.vtorshyn.word.processor.WordsRangeReader;
+import com.vtorshyn.word.processor.WordProcessor;
+
 
 public class OptionsMap extends HashMap<String,String>{
 
@@ -134,6 +136,7 @@ public class OptionsMap extends HashMap<String,String>{
 			if ("help".equals(option)) {
 				help(WordsRangeReader.class);
 				help(WordProcessorBuilder.class);
+				help(WordProcessor.class);
 				help(WordMapBuilder.class);
 				System.exit(0);
 			}
