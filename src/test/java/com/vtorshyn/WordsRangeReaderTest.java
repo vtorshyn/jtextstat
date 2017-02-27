@@ -29,7 +29,7 @@ public class WordsRangeReaderTest extends TestCase {
 	public void test_no_options_exception_thrown() {
 		try {
 			WordsRangeReader w = new WordsRangeReader();
-			fail("Excpected exception to be thrown");
+			fail("Expected exception to be thrown");
 		} catch(Exception e) {
 			
 		}

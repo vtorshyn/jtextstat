@@ -11,7 +11,6 @@ public class CharUtilsTest extends TestCase {
 	private char alphaNum[] = {'a', 'A', 'z', 'Z', '0','9'};
 	private char nonAlphaNum[] =  {'!', '?', '~', '.', ',', '-', '\n'};
 	
-	@SuppressWarnings("static-access")
 	public CharUtilsTest( String testName ){
 		super( testName );
 	}
