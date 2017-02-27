@@ -47,7 +47,7 @@ public class SingleThreadWordProcessor extends WordProcessor {
 		//return wordsMap;
 		int max_output = maxEntries.intValue(); 
 		Map<String, Integer> m = wordsMap.entrySet().stream()
-				.filter(s -> s.getValue() >= minimum.intValue())
+				.filter(s -> s.getValue() >= frequency.intValue())
 				.sorted(Map.Entry.<String, Integer> comparingByValue(Comparator.reverseOrder()) 
 						.thenComparing(Map.Entry.comparingByKey()) // and the by
 																	// key

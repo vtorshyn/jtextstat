@@ -118,6 +118,8 @@ public class OptionsMap extends HashMap<String,String>{
 		String option = null;
 		int len = strings.length,
 				idx = 0;
+		if (len < 2)
+			help();
 		for (; idx < len; ++idx) {
 			String v = strings[idx];
 			if (!v.startsWith(delim)) {
@@ -134,14 +136,17 @@ public class OptionsMap extends HashMap<String,String>{
 				option = v.replaceFirst("-", "");
 			}
 			if ("help".equals(option)) {
-				help(WordsRangeReader.class);
-				help(WordProcessorBuilder.class);
-				help(WordProcessor.class);
-				help(WordMapBuilder.class);
-				System.exit(0);
+				help();
 			}
-
 		}
+	}
+	
+	public void help() {
+		help(WordsRangeReader.class);
+		help(WordProcessorBuilder.class);
+		help(WordProcessor.class);
+		help(WordMapBuilder.class);
+		System.exit(0);
 	}
 	
 	/**!

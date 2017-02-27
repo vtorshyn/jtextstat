@@ -78,7 +78,7 @@ public class MPWordProcessor extends WordProcessor implements Runnable {
 	public Map<String, Integer> getSortedMap() {
 		// return wordsMap;
 		int max_output = maxEntries.intValue();
-		Map<String, Integer> m = wordsMap.entrySet().stream().filter(s -> s.getValue() >= minimum.intValue())
+		Map<String, Integer> m = wordsMap.entrySet().stream().filter(s -> s.getValue() >= frequency.intValue())
 				.sorted(Map.Entry.<String, Integer> comparingByValue(Comparator.reverseOrder()) // by value
 						.thenComparing(Map.Entry.comparingByKey()) // and then by key
 				).limit(max_output).collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));

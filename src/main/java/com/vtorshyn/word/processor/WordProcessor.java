@@ -8,7 +8,7 @@ import com.vtorshyn.utils.Logger;
 
 public abstract class WordProcessor {
 	@IntegerCommandLineOption(defaultValue = 5, help = "Simple filter for words counters.")
-	public Integer minimum;
+	public Integer frequency;
 
 	@IntegerCommandLineOption(defaultValue = 5, help = "Limit output to this number of entries.")
 	public Integer maxEntries;
@@ -29,7 +29,7 @@ public abstract class WordProcessor {
 			logger = Logger.get();
 			o.bind(WordProcessor.class, this);
 			logger.log(WordProcessor.class.getName() + ".maxEntries=" + maxEntries.toString());
-			logger.log(WordProcessor.class.getName() + ".minimum=" + minimum.toString());
+			logger.log(WordProcessor.class.getName() + ".frequency=" + frequency.toString());
 		} catch (Exception e) {
 			logger.log("Error: " + e.getMessage());
 			throw e;
