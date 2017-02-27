@@ -1,6 +1,11 @@
 package com.vtorshyn.word.processor;
 
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 import com.vtorshyn.utils.IntegerCommandLineOption;
 import com.vtorshyn.utils.StringCommandLineOption;
 import com.vtorshyn.utils.OptionsMap;
@@ -18,10 +23,9 @@ public abstract class WordProcessor {
 	
 	protected Logger logger;
 	
+	protected Map<String, Integer> wordsMap;
+	
 	public abstract void start() throws Exception;
-	public abstract Map<String, Integer> getSortedMap();
-	public abstract int getTotalMapSize();
-	public abstract int getTotalNumberOfProcessedItems();
 	
 	protected void init() throws Exception {
 		try {
@@ -34,5 +38,33 @@ public abstract class WordProcessor {
 			logger.log("Error: " + e.getMessage());
 			throw e;
 		}
+	}
+	
+	public Map<String, Integer> getSortedMap () {
+		//return wordsMap;
+		int max_output = maxEntries.intValue(); 
+		Map<String, Integer> m = wordsMap.entrySet().stream()
+				.filter(s -> s.getValue() >= frequency.intValue())
+				.sorted(Map.Entry.<String, Integer> comparingByValue(Comparator.reverseOrder()) 
+						.thenComparing(Map.Entry.comparingByKey()) // and the by
+																	// key
+				).limit(max_output).collect(
+						Collectors.toMap(
+								Entry::getKey, Entry::getValue, 
+								(e1, e2) -> e1, LinkedHashMap::new)
+						);
+		return m;
+	}
+	
+	public int getTotalMapSize() {
+		return wordsMap.size();
+	}
+
+	public int getTotalNumberOfProcessedItems() {
+		int total = 0;
+		for (Map.Entry<String, Integer> e : wordsMap.entrySet()) {
+			total += e.getValue().intValue();
+		}
+		return total;
 	}
 }

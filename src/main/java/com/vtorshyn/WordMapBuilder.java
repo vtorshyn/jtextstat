@@ -47,6 +47,10 @@ public class WordMapBuilder {
 				word = "";
 			}
 		}
+		// Edge case when last char in buffer is alphanum. Captured by UT :)
+		if (word.length() > 0) {
+			wordsMap.merge(word, 1, Integer::sum);
+		}
 		return wordsMap;
 	}
 }

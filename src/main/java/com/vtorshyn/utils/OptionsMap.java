@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import com.vtorshyn.WordMapBuilder;
-import com.vtorshyn.exceptions.CommandLineException;
+import com.vtorshyn.exceptions.WordMapException;
 import com.vtorshyn.word.processor.WordProcessorBuilder;
 import com.vtorshyn.word.processor.WordsRangeReader;
 import com.vtorshyn.word.processor.WordProcessor;
@@ -16,7 +16,7 @@ public class OptionsMap extends HashMap<String,String>{
 	private static final long serialVersionUID = 1L;
 	private static OptionsMap instance = null;
 
-	private OptionsMap(String[] stringList) throws CommandLineException {
+	private OptionsMap(String[] stringList) throws WordMapException {
 		super();
 		loadFromStringArray(stringList, "-");
 	}
@@ -86,16 +86,16 @@ public class OptionsMap extends HashMap<String,String>{
 		}
 	}
 	
-	public static OptionsMap init(String[] stringList) throws CommandLineException {
+	public static OptionsMap init(String[] stringList) throws WordMapException {
 		if (null == OptionsMap.instance) {
 			OptionsMap.instance = new OptionsMap(stringList);
 		}
 		return OptionsMap.instance;
 	}
 	
-	public static OptionsMap get() throws CommandLineException {
+	public static OptionsMap get() throws WordMapException {
 		if (null == OptionsMap.instance) {
-			throw new CommandLineException("Has not been initialized yet");
+			throw new WordMapException("Has not been initialized yet");
 		}
 		return OptionsMap.instance;
 	}
@@ -111,10 +111,10 @@ public class OptionsMap extends HashMap<String,String>{
 	 *
 	 * @param strings - input String[], usually args from main()
 	 * @param delim - delimiter used to detect option
-	 * @throws CommandLineException 
+	 * @throws WordMapException 
 	 * - if unknown option supplied
 	 */
-	public void loadFromStringArray(String[] strings, String delim) throws CommandLineException {
+	public void loadFromStringArray(String[] strings, String delim) throws WordMapException {
 		String option = null;
 		int len = strings.length,
 				idx = 0;
@@ -128,7 +128,7 @@ public class OptionsMap extends HashMap<String,String>{
 					option = null;
 					continue;
 				}
-				throw new CommandLineException("Unknown option: " + v);
+				throw new WordMapException("Unknown option: " + v);
 			} else if (null != option) {
 				this.put(option, "");
 				option = v.replaceFirst("-", "");

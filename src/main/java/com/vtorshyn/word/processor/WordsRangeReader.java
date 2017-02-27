@@ -44,7 +44,7 @@ public class WordsRangeReader {
 			OptionsMap o = OptionsMap.get();
 			o.bind(this.getClass(), this);
 			path = Paths.get(file);
-			reader = Files.newBufferedReader(path, Charset.forName("UTF-8"));
+			reader = Files.newBufferedReader(path, Charset.forName("ASCII"));
 			buffer = new char[readBufferSize + readBufferDeltaSize];
 			lastItemIndex = readBufferSize - 1;
 			logger.log(this.getClass().getName()+".readBufferSize="+readBufferSize);

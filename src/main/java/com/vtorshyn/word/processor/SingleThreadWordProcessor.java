@@ -11,8 +11,6 @@ import com.vtorshyn.WordMapBuilder;
 
 
 public class SingleThreadWordProcessor extends WordProcessor {
-	
-	private Map<String, Integer> wordsMap;
 
 	public void start() throws Exception {
 		init();
@@ -21,41 +19,15 @@ public class SingleThreadWordProcessor extends WordProcessor {
 		wordsMap = new HashMap<String, Integer>(512);
 		char[] buffer;
 
+		// Read next chunk of data from file buffer
 		while ((buffer = rd.nextChunk()) != null) {
 			Map<String, Integer> m = mapBuilder.buildFromCharArray(buffer);
 			for(Map.Entry<String, Integer> e : m.entrySet()) {
+				// Merge processed map into global map
 				wordsMap.merge(e.getKey(), e.getValue(), Integer::sum);
 			}
 		}
 		if (debugRaw.length() > 0)
 			logger.log(wordsMap.toString());
-	}
-	
-	public int getTotalMapSize() {
-		return wordsMap.size();
-	}
-	
-	public int getTotalNumberOfProcessedItems() {
-		int total = 0;
-		for(Map.Entry<String, Integer> e : wordsMap.entrySet()) {
-			total += e.getValue().intValue();
-		}
-		return total;
-	}
-	
-	public Map<String, Integer> getSortedMap () {
-		//return wordsMap;
-		int max_output = maxEntries.intValue(); 
-		Map<String, Integer> m = wordsMap.entrySet().stream()
-				.filter(s -> s.getValue() >= frequency.intValue())
-				.sorted(Map.Entry.<String, Integer> comparingByValue(Comparator.reverseOrder()) 
-						.thenComparing(Map.Entry.comparingByKey()) // and the by
-																	// key
-				).limit(max_output).collect(
-						Collectors.toMap(
-								Entry::getKey, Entry::getValue, 
-								(e1, e2) -> e1, LinkedHashMap::new)
-						);
-		return m;
 	}
 }

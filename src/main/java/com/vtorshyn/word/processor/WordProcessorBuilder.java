@@ -29,7 +29,7 @@ public class WordProcessorBuilder {
 	
 	public WordProcessor construct() throws Exception {
 		if (parallelFactor > 1) {
-			return new MPWordProcessor(parallelFactor);
+			return new MultiThreadWordProcessor(parallelFactor);
 		} 
 		return new SingleThreadWordProcessor();
 	}

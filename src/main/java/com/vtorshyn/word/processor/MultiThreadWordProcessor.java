@@ -15,10 +15,8 @@ import com.vtorshyn.utils.Logger;
 import com.vtorshyn.WordMapBuilder;
 
 
-public class MPWordProcessor extends WordProcessor implements Runnable {
+public class MultiThreadWordProcessor extends WordProcessor implements Runnable {
 
-	private Map<String, Integer> wordsMap;
-	
 	private int threadPoolSize = 1;
 	
 	private class Context {
@@ -35,12 +33,12 @@ public class MPWordProcessor extends WordProcessor implements Runnable {
 	
 	private Context ctx;
 	
-	public MPWordProcessor(int threadPoolSize) throws Exception {
+	public MultiThreadWordProcessor(int threadPoolSize) throws Exception {
 		init();
 		this.threadPoolSize = threadPoolSize;
 	}
 	
-	private MPWordProcessor(Context ctx) throws Exception {
+	private MultiThreadWordProcessor(Context ctx) throws Exception {
 		//init();
 		this.ctx = ctx;
 	}
@@ -53,7 +51,7 @@ public class MPWordProcessor extends WordProcessor implements Runnable {
 		char[] buffer;
 
 		while ((buffer = rd.nextChunk()) != null) {
-			MPWordProcessor r = new MPWordProcessor(new Context(wordsMap, buffer, mapBuilder));
+			MultiThreadWordProcessor r = new MultiThreadWordProcessor(new Context(wordsMap, buffer, mapBuilder));
 			s.execute(r);
 		}
 		
@@ -61,28 +59,6 @@ public class MPWordProcessor extends WordProcessor implements Runnable {
 		s.awaitTermination(10, TimeUnit.SECONDS);
 		if (debugRaw.length() > 0)
 			logger.log(wordsMap.toString());
-	}
-
-	public int getTotalMapSize() {
-		return wordsMap.size();
-	}
-
-	public int getTotalNumberOfProcessedItems() {
-		int total = 0;
-		for (Map.Entry<String, Integer> e : wordsMap.entrySet()) {
-			total += e.getValue().intValue();
-		}
-		return total;
-	}
-
-	public Map<String, Integer> getSortedMap() {
-		// return wordsMap;
-		int max_output = maxEntries.intValue();
-		Map<String, Integer> m = wordsMap.entrySet().stream().filter(s -> s.getValue() >= frequency.intValue())
-				.sorted(Map.Entry.<String, Integer> comparingByValue(Comparator.reverseOrder()) // by value
-						.thenComparing(Map.Entry.comparingByKey()) // and then by key
-				).limit(max_output).collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-		return m;
 	}
 
 	@Override
