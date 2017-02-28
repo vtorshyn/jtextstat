@@ -3,6 +3,7 @@ package com.vtorshyn.word.processor.app.executors;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 
 import com.vtorshyn.WordMapBuilder;
 import com.vtorshyn.utils.LogLevels;
@@ -13,6 +14,19 @@ import com.vtorshyn.word.processor.app.Application;
 
 
 public class Simple extends Application {
+	public class Context {
+		public Map<String, Integer> wordsMap;
+		public char[] buffer;
+		public WordMapBuilder builder;
+		
+		public Context(Map<String, Integer> map, char[] buffer, WordMapBuilder builder) {
+			this.wordsMap = map;
+			this.buffer = Arrays.copyOf(buffer, buffer.length);
+			this.builder = builder;
+		}
+	}
+	private BlockingQueue<Context> tasks;
+	
 	public Simple(Logger logger, PropertiesMap propeties) throws Exception {
 		propeties.bind(this);
 		init(logger, propeties);
@@ -37,11 +51,14 @@ public class Simple extends Application {
 
 		// Read next chunk of data from file buffer
 		while (rd.nextChunk(buffer, 0, bufferSize, maxFragmentsScan) > 0) {
-			Map<String, Integer> m = mapBuilder.buildFromCharArray(buffer);
-			for(Map.Entry<String, Integer> e : m.entrySet()) {
+			//
+			//Map<String, Integer> m = mapBuilder.buildFromCharArray(buffer);
+			//for(Map.Entry<String, Integer> e : m.entrySet()) {
 				// Merge processed map into global map
-				wordsMap.merge(e.getKey(), e.getValue(), Integer::sum);
-			}
+			//	wordsMap.merge(e.getKey(), e.getValue(), Integer::sum);
+			//}
+			new Context(wordsMap, buffer, mapBuilder);
+			//
 		}
 		if (isDebugRawOn())
 			logger().log(LogLevels.LOG_DEBUG, wordsMap.toString());
