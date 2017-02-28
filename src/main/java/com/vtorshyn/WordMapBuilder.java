@@ -18,25 +18,31 @@ public class WordMapBuilder {
 	}
 	
 	public Map<String, Integer> buildFromCharArray(char[] buffer) {
-		Map<String, Integer> wordsMap = new HashMap<>(512);
+		Map<String, Integer> wordsMap = new HashMap<>(128);
 		return buildFromCharArray(wordsMap, buffer);
 	}
 	
 	public Map<String, Integer> buildFromCharArray(Map<String, Integer> wordsMap, char[] buffer) {
-		int pos = 0;
+		int pos = 0, offset = 0, count = 0;
 		String word = "";
-		
+		if ("on".equals(ignoreCase)) {
+			for(; pos < buffer.length; ++pos) {
+				char c = buffer[pos];
+				buffer[pos] = Character.toLowerCase(c);
+			}
+			pos = 0;
+		}
 		for (; pos < buffer.length; ++pos) {
 			char _ch = buffer[pos];
 			if (CharUtils.isazAZ09(_ch)) {
-				word += _ch;
+				++count;
 			} else {
-				if (word.length() > 0) {
-					if (ignoreCase.length() > 0)
-						word = word.toLowerCase(); // will slightly slowdown
-					wordsMap.merge(word, 1, Integer::sum);
+				if (count > 0) {
+					String value = String.copyValueOf(buffer, offset, count);
+					wordsMap.merge(value, 1, Integer::sum);
+					count = 0;
 				}
-				word = "";
+				offset = pos + 1;
 			}
 		}
 		// Edge case when last char in buffer is alphanum. Captured by UT :)

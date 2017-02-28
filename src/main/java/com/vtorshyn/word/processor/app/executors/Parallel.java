@@ -77,32 +77,9 @@ public class Parallel extends Application implements Runnable {
 		int active = 0;
 		int flag = 0;
 		while (rd.hasData()) {
-				active = queue.size();
-				if (active == threadPoolSize) {
-					continue;
-				}
-				int offset_ = flag * readSegmentSize;
-				int end_ = offset_ + readSegmentSize;
-				logger_.log(LogLevels.LOG_DEBUG1, 
-						getClass().getName() + 
-						"::producer: queue_size=" + active
-						+ ", offset_=" + offset_
-						+ ", end_="+ end_
-						);
-				CharBuffer bufferSegment = sharedBuffer.subSequence(offset_, end_);
-				int rdCount = rd.nextChunk(bufferSegment, bufferSize, maxFragmentsScan);
-				if (rdCount <= 0)
-					break;
-				totalReadSize += rdCount;
 				
-				queue.put(new Parallel(new Context(logger(), wordsMap, bufferSegment.array(), mapBuilder)));
-				if (flag == 0) {
-					flag = 1;
-				} else {
-					flag = 0;
-				}
 		}
-		queue.notifyAll();
+		
 		logger().log(LogLevels.LOG_INFO, " parsing loop done. Total: " + totalReadSize);
 		
 		service.shutdown();

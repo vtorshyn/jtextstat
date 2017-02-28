@@ -76,7 +76,7 @@ public class WordsRangeReader {
 		if (count > buffer.length) {
 			throw new WordMapException(getClass().getName()+": requested read count larger then buffer size.");
 		}
-		Arrays.fill(buffer, offset, count, '\0');
+		Arrays.fill(buffer, offset, count + maxItemsScan, '\0');
 		int rd = reader.read(buffer, offset, count);
 		if (rd <= 0) {
 			hasData_ = false;
