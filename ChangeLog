@@ -1,0 +1,10 @@
+Version: 0.0.1
+Date: 
+- Initial release
+
+Version: 0.0.2
+Date:
+- Total refactoring of source code for easier maintainance and reading
+- Added new feature: reading concurently into single chunk of memory without locks.
+- Limited number of active threads to supplied threadPoolSize property
+- Number of small performance optimizations in 

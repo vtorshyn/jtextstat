@@ -3,7 +3,6 @@ package com.vtorshyn;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vtorshyn.utils.OptionsMap;
 import com.vtorshyn.utils.CharUtils;
 import com.vtorshyn.utils.Logger;
 import com.vtorshyn.utils.StringCommandLineOption;
@@ -13,24 +12,17 @@ public class WordMapBuilder {
 	public String ignoreCase;
 	
 	Logger logger;
-	
-	private void init() {
-		logger = Logger.get();
-		try {
-			OptionsMap o = OptionsMap.get();
-			o.bind(this.getClass(), this);
-			logger.log(this.getClass().getName() + ".ignoreCase="+ignoreCase);
-		} catch (Exception e) {
-			logger.log("Error: " + e.getMessage());
-		}
-	}
-	
-	public WordMapBuilder() {
-		init();
+
+	public WordMapBuilder(Logger logger) {
+		this.logger = logger;
 	}
 	
 	public Map<String, Integer> buildFromCharArray(char[] buffer) {
 		Map<String, Integer> wordsMap = new HashMap<>(512);
+		return buildFromCharArray(wordsMap, buffer);
+	}
+	
+	public Map<String, Integer> buildFromCharArray(Map<String, Integer> wordsMap, char[] buffer) {
 		int pos = 0;
 		String word = "";
 		

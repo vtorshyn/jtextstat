@@ -1,8 +1,11 @@
 package com.vtorshyn;
 
+import java.util.Map;
+
+import com.vtorshyn.utils.BoundedMapSorter;
 import com.vtorshyn.utils.Logger;
-import com.vtorshyn.word.processor.WordProcessor;
-import com.vtorshyn.word.processor.WordProcessorBuilder;
+import com.vtorshyn.word.processor.ApplicationFactory;
+import com.vtorshyn.word.processor.app.Application;
 
 /**!
  * 
@@ -11,12 +14,16 @@ import com.vtorshyn.word.processor.WordProcessorBuilder;
  */
 public class Main {
 	public static void main(String[] args) throws Exception {
-		WordProcessor p = new WordProcessorBuilder(args).construct();
-		Logger logger = Logger.get();
-		p.start();
+		ApplicationFactory factory = new ApplicationFactory(args); 
+		Logger logger = factory.logger();
+		Application app = factory.construct();
+		Map<String, Integer> result = app.start();
+		Map<String, Integer> sorted = new BoundedMapSorter(result).sort(app.maxEntries, app.frequency);
+		
 		logger.log("\n*** Completed succesfully ***");
-		logger.log("Total word count: " + p.getTotalNumberOfProcessedItems());
-		logger.log("Total number of unique words: " + p.getTotalMapSize());
-		logger.log("Result: " + p.getSortedMap());
+		logger.log("Total word count: " + app.getTotalNumberOfProcessedItems());
+		logger.log("Total number of unique words: " + app.getTotalMapSize());
+		logger.log("Result: ");
+		sorted.entrySet().stream().forEach(action -> logger.log(""+action));
 	}
 }
