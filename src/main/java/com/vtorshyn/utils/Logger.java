@@ -29,10 +29,6 @@ public class Logger {
 	}
 	
 	public void log(LogLevels level, String what) {
-		/*if (level.compareTo(LogLevels.LOG_DEBUG) == 0) {
-			log(this.getClass().getName() + "::log::LogLevel("+level+")::log("+what + ")");
-		}*/
-		
 		if (level.intValue() <= debugLevel) {
 			log(what);
 		}
