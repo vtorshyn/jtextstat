@@ -11,5 +11,5 @@ public @interface StringCommandLineOption {
 
 	boolean mandatory() default false;
 
-	Class type() default String.class;
+	Class<?> type() default String.class;
 }

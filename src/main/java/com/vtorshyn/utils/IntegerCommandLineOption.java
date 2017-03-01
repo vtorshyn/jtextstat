@@ -11,5 +11,5 @@ public @interface IntegerCommandLineOption {
 
 	boolean mandatory() default false;
 
-	Class type() default Integer.class;
+	Class<?> type() default Integer.class;
 }

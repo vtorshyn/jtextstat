@@ -1,8 +1,12 @@
 package com.vtorshyn;
 
+import java.util.Map;
+
+import com.vtorshyn.utils.BoundedMapSorter;
+import com.vtorshyn.utils.LogLevels;
 import com.vtorshyn.utils.Logger;
-import com.vtorshyn.word.processor.WordProcessor;
-import com.vtorshyn.word.processor.WordProcessorBuilder;
+import com.vtorshyn.word.processor.ExecutorBuilder;
+import com.vtorshyn.word.processor.app.Application;
 
 /**!
  * 
@@ -10,13 +14,24 @@ import com.vtorshyn.word.processor.WordProcessorBuilder;
  * Main class of application.
  */
 public class Main {
-	public static void main(String[] args) throws Exception {
-		WordProcessor p = new WordProcessorBuilder(args).construct();
-		Logger logger = Logger.get();
-		p.start();
-		logger.log("\n*** Completed succesfully ***");
-		logger.log("Total word count: " + p.getTotalNumberOfProcessedItems());
-		logger.log("Total number of unique words: " + p.getTotalMapSize());
-		logger.log("Result: " + p.getSortedMap());
+	public static void main(String[] args) {
+		try {
+			ExecutorBuilder factory = new ExecutorBuilder(args); 
+			Logger logger = factory.logger();
+			logger.log(LogLevels.LOG_INFO, "Creating application...");
+			Application app = factory.construct();
+			logger.log(LogLevels.LOG_MESSAGE, "Starting application...");
+			Map<String, Integer> result = app.start();
+			Map<String, Integer> sorted = new BoundedMapSorter(result).sort(app.limit, app.frequency);
+			
+			logger.log("\n*** Completed succesfully ***");
+			logger.log("Total word count: " + app.totalCount());
+			logger.log("Total number of unique words: " + app.uniqueCount());
+			logger.log("Result: ");
+			sorted.entrySet().stream().forEach(action -> logger.log(""+action));
+		} catch(Exception e) {
+			System.out.println("Critical problem: " + e.getMessage());
+			System.exit(-1);
+		}
 	}
 }

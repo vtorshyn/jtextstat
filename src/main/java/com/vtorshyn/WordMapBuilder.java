@@ -3,53 +3,65 @@ package com.vtorshyn;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vtorshyn.utils.OptionsMap;
 import com.vtorshyn.utils.CharUtils;
 import com.vtorshyn.utils.Logger;
 import com.vtorshyn.utils.StringCommandLineOption;
 
 public class WordMapBuilder {
-	@StringCommandLineOption(defaultValue="", mandatory=false, help="Ignore case, e.g. \"text\" and \"tExt\" will be counted separtely")
+	@StringCommandLineOption(defaultValue="false", mandatory=false, help="If \"true\" transformation to lower case will be done. Will slow down processing.")
 	public String ignoreCase;
 	
 	Logger logger;
-	
-	private void init() {
-		logger = Logger.get();
-		try {
-			OptionsMap o = OptionsMap.get();
-			o.bind(this.getClass(), this);
-			logger.log(this.getClass().getName() + ".ignoreCase="+ignoreCase);
-		} catch (Exception e) {
-			logger.log("Error: " + e.getMessage());
-		}
+
+	public WordMapBuilder(Logger logger) {
+		this.logger = logger;
 	}
 	
-	public WordMapBuilder() {
-		init();
-	}
-	
+	/**!
+	 * Does same as a version with Map<> parameter.
+	 * 
+	 * Except it creates new HashMap<> to store results.
+	 * 
+	 * @param buffer
+	 * @return map of words
+	 */
 	public Map<String, Integer> buildFromCharArray(char[] buffer) {
-		Map<String, Integer> wordsMap = new HashMap<>(512);
-		int pos = 0;
-		String word = "";
-		
+		Map<String, Integer> wordsMap = new HashMap<>(128);
+		return buildFromCharArray(wordsMap, buffer);
+	}
+	
+	/**!
+	 * Builds words from buffer. Result stored in \param wordsMap.
+	 * 
+	 * Input buffer will be changed if ignoreCase option is true.
+	 * 
+	 * Word delimiter is defined in {@link CharUtils}
+	 * 
+	 * @param wordsMap
+	 * @param buffer
+	 * @return map of words
+	 */
+	public Map<String, Integer> buildFromCharArray(Map<String, Integer> wordsMap, char[] buffer) {
+		int pos = 0, offset = 0, count = 0;
+		if ("true".equals(ignoreCase)) {
+			for(; pos < buffer.length; ++pos) {
+				char c = buffer[pos];
+				buffer[pos] = Character.toLowerCase(c);
+			}
+			pos = 0;
+		}
 		for (; pos < buffer.length; ++pos) {
 			char _ch = buffer[pos];
 			if (CharUtils.isazAZ09(_ch)) {
-				word += _ch;
+				++count;
 			} else {
-				if (word.length() > 0) {
-					if (ignoreCase.length() > 0)
-						word = word.toLowerCase(); // will slightly slowdown
-					wordsMap.merge(word, 1, Integer::sum);
+				if (count > 0) {
+					String value = String.copyValueOf(buffer, offset, count);
+					wordsMap.merge(value, 1, Integer::sum);
+					count = 0;
 				}
-				word = "";
+				offset = pos + 1;
 			}
-		}
-		// Edge case when last char in buffer is alphanum. Captured by UT :)
-		if (word.length() > 0) {
-			wordsMap.merge(word, 1, Integer::sum);
 		}
 		return wordsMap;
 	}
