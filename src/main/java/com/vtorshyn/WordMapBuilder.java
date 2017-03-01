@@ -8,7 +8,7 @@ import com.vtorshyn.utils.Logger;
 import com.vtorshyn.utils.StringCommandLineOption;
 
 public class WordMapBuilder {
-	@StringCommandLineOption(defaultValue="", mandatory=false, help="Ignore case, e.g. \"text\" and \"tExt\" will be counted separtely")
+	@StringCommandLineOption(defaultValue="false", mandatory=false, help="If \"true\" transformation to lower case will be done. Will slow down processing.")
 	public String ignoreCase;
 	
 	Logger logger;
@@ -24,8 +24,7 @@ public class WordMapBuilder {
 	
 	public Map<String, Integer> buildFromCharArray(Map<String, Integer> wordsMap, char[] buffer) {
 		int pos = 0, offset = 0, count = 0;
-		String word = "";
-		if ("on".equals(ignoreCase)) {
+		if ("true".equals(ignoreCase)) {
 			for(; pos < buffer.length; ++pos) {
 				char c = buffer[pos];
 				buffer[pos] = Character.toLowerCase(c);
@@ -44,10 +43,6 @@ public class WordMapBuilder {
 				}
 				offset = pos + 1;
 			}
-		}
-		// Edge case when last char in buffer is alphanum. Captured by UT :)
-		if (word.length() > 0) {
-			wordsMap.merge(word, 1, Integer::sum);
 		}
 		return wordsMap;
 	}

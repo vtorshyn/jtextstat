@@ -1,12 +1,16 @@
 package com.vtorshyn.utils;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
+/**!
+ * 
+ * @author vtorshyn
+ *
+ * Streams based bonded sorter for Map<String, Integer>
+ */
 public class BoundedMapSorter {
 
 	private Map<String, Integer> map_;

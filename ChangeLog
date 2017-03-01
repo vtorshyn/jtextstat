@@ -5,6 +5,7 @@ Date:
 Version: 0.0.2
 Date:
 - Total refactoring of source code for easier maintainance and reading
-- Added new feature: reading concurently into single chunk of memory without locks.
-- Limited number of active threads to supplied threadPoolSize property
-- Number of small performance optimizations in 
+- Removed shared buffer; used SPMC pattern instead.
+- Limited number of active threads to threads property
+- Number of small performance optimizations in FileReader, WordMapBuilder, Application
+- New speed record: 4.579 sec on Core i5 1.7 for 530000000 bytes input file

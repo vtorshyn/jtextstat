@@ -6,7 +6,7 @@ import junit.framework.TestSuite;
 
 import com.vtorshyn.exceptions.WordMapException;
 import com.vtorshyn.utils.PropertiesMap;
-import com.vtorshyn.word.processor.WordsRangeReader;
+import com.vtorshyn.word.processor.CharFileReader;
 
 public class WordsRangeReaderTest extends TestCase {
 	private String[] commonArgs = {"-file", "testFile"};
@@ -29,7 +29,7 @@ public class WordsRangeReaderTest extends TestCase {
 	public void test_no_options_exception_thrown() {
 		try {
 			// TODO: test_no_options_exception_thrown: Fix failure 
-			WordsRangeReader w = new WordsRangeReader();
+			CharFileReader w = new CharFileReader();
 			//fail("Expected exception to be thrown");
 		} catch(Exception e) {
 			
@@ -39,7 +39,7 @@ public class WordsRangeReaderTest extends TestCase {
 	public void test_zero_read() {
 		try {
 			options.parse(devNullRead, "-");
-			WordsRangeReader w = new WordsRangeReader();
+			CharFileReader w = new CharFileReader();
 			char  data[] = w.nextChunk();
 			assertTrue(data == null);
 		} catch(Exception e) {
