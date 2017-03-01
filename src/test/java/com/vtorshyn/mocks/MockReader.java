@@ -21,7 +21,7 @@ public class MockReader extends Reader {
 		}
 		idx += off;
 		idx += count;
-		System.out.println("MockReader::read(" + String.valueOf(cbuf) + ")=" + idx);
+		//System.out.println("MockReader::read(" + String.valueOf(cbuf) + ")=" + idx);
 		return count;
 	}
 

@@ -52,10 +52,10 @@ public class PropertiesMap extends HashMap<String,String>{
 					"::bind() - Bind parameter 0 is NULL");
 		}
 		Field[] fields = _class.getFields();//getDeclaredFields();
-		logger.log(LogLevels.LOG_DEBUG, "bind::(T="+_class.getName()+", Object=" + o.toString() + ").fields=" + fields.length);		
+		logger.log(LogLevels.LOG_DEBUG1, "bind::(T="+_class.getName()+", Object=" + o.toString() + ").fields=" + fields.length);		
 		for (Field f : fields) {
 			Annotation [] allAnnotations = f.getDeclaredAnnotations();
-			logger.log(LogLevels.LOG_DEBUG, "bind::(T="+_class.getName()+", Object=" + o.toString() + ").annotations=" + allAnnotations.length);
+			logger.log(LogLevels.LOG_DEBUG2, "bind::(T="+_class.getName()+", Object=" + o.toString() + ").annotations=" + allAnnotations.length);
 			for (Annotation a : allAnnotations) {
 				logger.log(LogLevels.LOG_DEBUG, "bind::(T="+_class.getName()+", Object=" + o.toString());
 				bindIntegerProperties(_class, o, f, a);
@@ -131,16 +131,6 @@ public class PropertiesMap extends HashMap<String,String>{
 						+ " : Invalid number of arguments. Expected at least: " 
 						+ expectedLen
 						);
-	}
-	
-	public void showUsageAndExit() {
-		/*
-		help(WordsRangeReader.class);
-		help(WordProcessorBuilder.class);
-		help(WordProcessor.class);message
-		help(WordMapBuilder.class);
-		System.exit(0);
-		*/
 	}
 	
 	/**!
