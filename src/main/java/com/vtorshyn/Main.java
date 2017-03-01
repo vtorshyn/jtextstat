@@ -3,6 +3,7 @@ package com.vtorshyn;
 import java.util.Map;
 
 import com.vtorshyn.utils.BoundedMapSorter;
+import com.vtorshyn.utils.LogLevels;
 import com.vtorshyn.utils.Logger;
 import com.vtorshyn.word.processor.ExecutorBuilder;
 import com.vtorshyn.word.processor.app.Application;
@@ -17,7 +18,9 @@ public class Main {
 		try {
 			ExecutorBuilder factory = new ExecutorBuilder(args); 
 			Logger logger = factory.logger();
+			logger.log(LogLevels.LOG_INFO, "Creating application...");
 			Application app = factory.construct();
+			logger.log(LogLevels.LOG_MESSAGE, "Starting application...");
 			Map<String, Integer> result = app.start();
 			Map<String, Integer> sorted = new BoundedMapSorter(result).sort(app.limit, app.frequency);
 			
