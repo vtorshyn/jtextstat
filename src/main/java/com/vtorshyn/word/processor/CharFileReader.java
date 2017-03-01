@@ -37,6 +37,23 @@ public class CharFileReader {
 	private BufferedReader reader = null;
 	private Logger logger;
 	
+	/**!
+	 * Replaces current BufferedReader by new one.
+	 * Old reader is returned on success.
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public BufferedReader reader(BufferedReader other) {
+		BufferedReader old = this.reader;
+		this.reader = other;
+		return old;
+	}
+	
+	public BufferedReader reader() {
+		return this.reader;
+	}
+	
 	public CharFileReader(Logger logger) throws Exception {
 		this.logger = logger;
 	}
@@ -91,10 +108,14 @@ public class CharFileReader {
 		if (CharUtils.isazAZ09(buffer[currentPos])) {
 			char _ch; 
 			int extraCount = 0;
-			while ( ((_ch = (char)reader.read()) > 0) &&
-					CharUtils.isazAZ09(_ch) && 
-					extraCount < maxItemsScan) 
+			while ( ((_ch = (char)reader.read()) > 0) )
 			{
+				if (!CharUtils.isazAZ09(_ch)) {
+					break;
+				}
+				if (extraCount >= maxItemsScan) {
+					break;
+				}
 				++rd;
 				++extraCount;
 				buffer[currentPos + extraCount] = _ch;
