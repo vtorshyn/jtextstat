@@ -38,16 +38,6 @@ public class CharFileReaderTest extends TestCase {
 		return new TestSuite( CharFileReaderTest.class );
 	}
 	
-	public void test_no_options_exception_thrown() {
-		try {
-			// TODO: test_no_options_exception_thrown: Fix failure 
-			CharFileReader w = new CharFileReader(logger);
-			//fail("Expected exception to be thrown");
-		} catch(Exception e) {
-			
-		}
-	}
-	
 	public void test_file_too_small_buffer() {
 		try {
 			char  data[]  = new char[8192];
@@ -60,7 +50,7 @@ public class CharFileReaderTest extends TestCase {
 			
 			// Should return how many reads done in backend to obtain full buffer
 			String result = String.valueOf(data,0, count);
-			System.out.println("[SmallRequested] Output is: count="+ count + " d='" + result + "' (" +data.length + ")");
+			//System.out.println("[SmallRequested] Output is: count="+ count + " d='" + result + "' (" +data.length + ")");
 			assertTrue("Samp".compareTo(result) == 0);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -83,7 +73,8 @@ public class CharFileReaderTest extends TestCase {
 			reader.setBuffer(stringBuffer.toCharArray());
 			int count = w.nextChunk(data,0,2,6);
 			String result = String.valueOf(data,0, count);
-			System.out.println("Outpbuildut is: count="+ count + " d='" + result + "' (" +data.length + ")");
+			
+			//System.out.println("Outpbuildut is: count="+ count + " d='" + result + "' (" +data.length + ")");
 			assertTrue("Sample".compareTo(result) == 0);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -106,7 +97,8 @@ public class CharFileReaderTest extends TestCase {
 			reader.setBuffer(stringBuffer.toCharArray());
 			int count = w.nextChunk(data,6,2,6);
 			String result = String.valueOf(data,0, 20);
-			System.out.println("[BufferOffset] Output is: count="+ count + " d='" + result + "' (" +data.length + ")");
+			
+			//System.out.println("[BufferOffset] Output is: count="+ count + " d='" + result + "' (" +data.length + ")");
 			assertFalse(" text".compareTo(result) == 0);
 		} catch(Exception e) {
 			e.printStackTrace();

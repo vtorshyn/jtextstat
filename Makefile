@@ -14,7 +14,7 @@ generated_test_file_text=.This is a test text, a text used by a test to test!
 java_application_read_buffer ?= 16384
 java_application_thread_count ?= 1
 
-java_application_options=-blockSize $(java_application_read_buffer) -queue $(java_application_thread_count) -threads $(java_application_thread_count)
+java_application_options=-blockSize $(java_application_read_buffer) -queue 4 -threads $(java_application_thread_count)
 java_application_main_class ?= com.vtorshyn.Main
 
 test_sanity_data_file=data/test.task.text

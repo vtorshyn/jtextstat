@@ -16,7 +16,7 @@ public class MockBufferedReader extends BufferedReader {
 	public
 	int read(char[] buffer, int offset, int count) throws IOException {
 		int c = rd.read(buffer, offset, count);
-		System.out.println("[["+String.copyValueOf(buffer) + "]]");
+		//System.out.println("[["+String.copyValueOf(buffer) + "]]");
 		return c;
 	}
 	
