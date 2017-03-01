@@ -7,7 +7,7 @@ import com.vtorshyn.exceptions.HelpException;
 import com.vtorshyn.utils.LogLevels;
 import com.vtorshyn.utils.Logger;
 
-public class ApplicationFactory {
+public class ExecutorBuilder {
 	
 	private Logger logger = null;
 	private PropertiesMap properties;
@@ -36,7 +36,7 @@ public class ApplicationFactory {
 		}
 	}
 	
-	public ApplicationFactory(String[] args) throws Exception {
+	public ExecutorBuilder(String[] args) throws Exception {
 		raw_properties = args;
 		init();
 	}

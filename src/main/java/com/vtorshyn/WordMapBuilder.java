@@ -17,11 +17,30 @@ public class WordMapBuilder {
 		this.logger = logger;
 	}
 	
+	/**!
+	 * Does same as a version with Map<> parameter.
+	 * 
+	 * Except it creates new HashMap<> to store results.
+	 * 
+	 * @param buffer
+	 * @return map of words
+	 */
 	public Map<String, Integer> buildFromCharArray(char[] buffer) {
 		Map<String, Integer> wordsMap = new HashMap<>(128);
 		return buildFromCharArray(wordsMap, buffer);
 	}
 	
+	/**!
+	 * Builds words from buffer. Result stored in \param wordsMap.
+	 * 
+	 * Input buffer will be changed if ignoreCase option is true.
+	 * 
+	 * Word delimiter is defined in {@link CharUtils}
+	 * 
+	 * @param wordsMap
+	 * @param buffer
+	 * @return map of words
+	 */
 	public Map<String, Integer> buildFromCharArray(Map<String, Integer> wordsMap, char[] buffer) {
 		int pos = 0, offset = 0, count = 0;
 		if ("true".equals(ignoreCase)) {

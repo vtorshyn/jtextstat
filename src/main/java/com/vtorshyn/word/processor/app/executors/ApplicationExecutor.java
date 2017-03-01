@@ -19,15 +19,18 @@ import com.vtorshyn.word.processor.app.Application;
  * 
  * @author vtorshyn
  * 
- * Async application implementaion.
+ * Async application executor (Producer).
  * It owns a blocking queue of tasks.
  * 
- * Also it spawns BlockingWorkers on initialization.
+ * Also it spawns BlockingWorkers (Consumers) on initialization.
+ * The number of threads defined in 
  */
 public class ApplicationExecutor extends Application {
 	
 	private BlockingQueue<Context> tasksQueue;
 	private ExecutorService service;
+	private CharFileReader rd;
+	private WordMapBuilder mapBuilder;
 	
 	public ApplicationExecutor(Logger logger, PropertiesMap propeties) throws Exception {
 		propeties.bind(this);
@@ -35,6 +38,14 @@ public class ApplicationExecutor extends Application {
 		tasksQueue = new LinkedBlockingQueue<Context>(tasks());
 		service = Executors.newFixedThreadPool(threads());
 		wordsMap = new ConcurrentHashMap<String, Integer>(128);
+		rd = new CharFileReader(logger());
+		mapBuilder = new WordMapBuilder(logger());
+		// Initializing objects properties supplied in PropertiesMap
+		properties().bind(rd);
+		properties().bind(mapBuilder);
+		// Initializing char stream reader
+		// It should be called after binding to PropertiesMap
+		rd.init();
 		startWorkers();
 	}
 	
@@ -62,17 +73,6 @@ public class ApplicationExecutor extends Application {
 	 * This method returns when input file read fully.
 	 */
 	public Map<String, Integer> start() throws Exception {
-		CharFileReader rd = new CharFileReader(logger());
-		WordMapBuilder mapBuilder = new WordMapBuilder(logger());
-
-		// Initializing objects properties supplied in PropertiesMap
-		properties().bind(rd);
-		properties().bind(mapBuilder);
-		
-		// Initializing char stream reader
-		// It should be called after binding to PropertiesMap
-		rd.init();
-
 		int bufferSize = rd.bufferSize();
 		int maxFragmentsScan = rd.bufferReserve();
 		char[] buffer = new char[bufferSize + maxFragmentsScan];

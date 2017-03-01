@@ -59,11 +59,11 @@ public abstract class Application {
 		return this.threads;
 	}
 	
-	public int getTotalMapSize() {
+	public int uniqueCount() {
 		return wordsMap.size();
 	}
 
-	public int getTotalNumberOfProcessedItems() {
+	public int totalCount() {
 		int total = 0;
 		for (Map.Entry<String, Integer> e : wordsMap.entrySet()) {
 			total += e.getValue().intValue();

@@ -7,11 +7,13 @@ import junit.framework.TestSuite;
 import java.util.Map;
 
 import com.vtorshyn.WordMapBuilder;
-import com.vtorshyn.utils.OptionsMap;
+import com.vtorshyn.utils.Logger;
+import com.vtorshyn.utils.PropertiesMap;;
 
 public class WordMapBuilderTest extends TestCase {
-	private OptionsMap options;
+	private PropertiesMap options;
 	private WordMapBuilder builder;
+	private Logger logger;
 	private String[] commonArgs = {"-file", "testFile"};
 
 	private char[] words_buffer = {'w','o','r', 'd', ' ', 'w', 'o', 'r', 'd', ' ', 'w', 'o', 'r', 'd'};
@@ -23,8 +25,10 @@ public class WordMapBuilderTest extends TestCase {
 	public WordMapBuilderTest( String testName ){
 		super( testName );
 		try {
-			options = options.init(commonArgs);
-			builder = new WordMapBuilder();
+			logger = new Logger();
+			options = new PropertiesMap(logger, commonArgs, "-", 2)
+					.bind(logger);
+			builder = new WordMapBuilder(logger);
 		} catch(Exception e) {
 			fail();
 		}
